@@ -1,24 +1,29 @@
 from customtkinter import *
 from CustomTkinterMessagebox import CTkMessagebox
-dic={}
 window = CTk()
 window.geometry("400x300")
 window.configure(fg_color="#de135c")
 window.title("Вхід")
 def showmessage(event):
     CTkMessagebox.messagebox(text="LogIn menu has not been implemented yet\n you can only register :)", title="error")
+def filedecode():
+    dic = {}
+    try:
+        file = open("users.txt", "r", encoding="UTF-8")
+    except FileNotFoundError:
+        file = open("users.txt", "a", encoding="UTF-8")
+    reading = file.read().split()
+    for i in reading:
+        a = i.split(":")
+        dic.update({a[0]: a[1]})
+    return dic
 def writedown():
     if password.get() != passwordrepeat.get():
         CTkMessagebox.messagebox(text="Паролі не збігаються", title="error")
     elif len(login.get())<3:
         CTkMessagebox.messagebox(text="Логін повинен бути довжиною хочаб в 3 символи", title="error")
     else:
-        file = open("users.txt", "r", encoding="UTF-8")
-        reading = file.read().split()
-        for i in reading:
-            a=i.split(":")
-            dic.update({a[0]:a[1]})
-        if login.get() not in dic:
+        if login.get() not in filedecode():
             file = open("users.txt", "a", encoding="UTF-8")
             file.write(f"{login.get()}:{password.get()}\n")
             title.destroy()
